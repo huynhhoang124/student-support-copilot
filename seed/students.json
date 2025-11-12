@@ -1,0 +1,16 @@
+[
+  {
+    "id": "stu-001",
+    "name": "Nguyen Van A",
+    "email": "nguyenvana@example.edu",
+    "major": "Khoa học Máy tính",
+    "year": 3
+  },
+  {
+    "id": "stu-002",
+    "name": "Tran Thi B",
+    "email": "tranthib@example.edu",
+    "major": "Quản trị Kinh doanh",
+    "year": 2
+  }
+]

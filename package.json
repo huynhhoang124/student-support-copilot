@@ -1,0 +1,31 @@
+{
+  "name": "student-support-copilot",
+  "version": "1.0.0",
+  "description": "Nền tảng hỗ trợ sinh viên chạy trên Serverless Framework với DynamoDB Local",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "serverless offline start",
+    "dynamodb": "serverless dynamodb start",
+    "seed": "serverless dynamodb seed"
+  },
+  "keywords": [
+    "serverless",
+    "dynamodb",
+    "student-support",
+    "gpt"
+  ],
+  "author": "Student Support Team",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1418.0",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "openai": "^4.47.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-dynamodb-local": "^0.2.40",
+    "serverless-offline": "^13.3.3"
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "studentId": "stu-001",
+    "term": "2023-fall",
+    "courses": [
+      { "courseId": "cse101", "grade": "A" },
+      { "courseId": "mat202", "grade": "B+" }
+    ]
+  },
+  {
+    "studentId": "stu-002",
+    "term": "2023-fall",
+    "courses": [
+      { "courseId": "bus205", "grade": "A-" },
+      { "courseId": "acc110", "grade": "B" }
+    ]
+  }
+]

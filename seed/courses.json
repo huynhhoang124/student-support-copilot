@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cse101",
+    "title": "Nhập môn Lập trình",
+    "credits": 3,
+    "instructor": "ThS. Le Minh"
+  },
+  {
+    "id": "bus205",
+    "title": "Nguyên lý Marketing",
+    "credits": 2,
+    "instructor": "TS. Nguyen Thu"
+  }
+]

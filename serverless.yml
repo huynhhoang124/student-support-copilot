@@ -1,0 +1,211 @@
+service: student-support-copilot
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
+  - serverless-dynamodb-local
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: dev
+  environment:
+    STUDENTS_TABLE: Students
+    COURSES_TABLE: Courses
+    FAQ_TABLE: Faq
+    GRADES_TABLE: Grades
+    ENROLLMENTS_TABLE: Enrollments
+    TICKETS_TABLE: Tickets
+    OPENAI_MODEL: gpt-4o-mini
+    OPENAI_TEMPERATURE: '0.6'
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedMethods:
+        - GET
+        - POST
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      domain:
+        sources:
+          - table: ${self:provider.environment.STUDENTS_TABLE}
+            sources: [./seed/students.json]
+          - table: ${self:provider.environment.COURSES_TABLE}
+            sources: [./seed/courses.json]
+          - table: ${self:provider.environment.FAQ_TABLE}
+            sources: [./seed/faq.json]
+          - table: ${self:provider.environment.GRADES_TABLE}
+            sources: [./seed/grades.json]
+
+functions:
+  getStudents:
+    handler: src/handlers/students.get
+    events:
+      - httpApi:
+          path: /students/{id}
+          method: get
+
+  getFaq:
+    handler: src/handlers/faq.get
+    events:
+      - httpApi:
+          path: /faq
+          method: get
+
+  classifyIntent:
+    handler: src/handlers/intent.post
+    events:
+      - httpApi:
+          path: /intent
+          method: post
+
+  createTicketSummary:
+    handler: src/handlers/tickets.post
+    events:
+      - httpApi:
+          path: /tickets/summary
+          method: post
+
+  enrollCourse:
+    handler: src/handlers/enrollments.post
+    events:
+      - httpApi:
+          path: /enrollments
+          method: post
+
+  getGrades:
+    handler: src/handlers/grades.get
+    events:
+      - httpApi:
+          path: /grades/{studentId}
+          method: get
+
+  getTimetable:
+    handler: src/handlers/timetable.get
+    events:
+      - httpApi:
+          path: /timetable/{studentId}
+          method: get
+
+  composeEmail:
+    handler: src/handlers/emails.post
+    events:
+      - httpApi:
+          path: /emails
+          method: post
+
+  suggestStudyPlan:
+    handler: src/handlers/studyplan.post
+    events:
+      - httpApi:
+          path: /studyplan
+          method: post
+
+  getTrendingFaq:
+    handler: src/handlers/trending.get
+    events:
+      - httpApi:
+          path: /faq/trending
+          method: get
+
+  login:
+    handler: src/auth/login.post
+    events:
+      - httpApi:
+          path: /auth/login
+          method: post
+
+  register:
+    handler: src/auth/register.post
+    events:
+      - httpApi:
+          path: /auth/register
+          method: post
+
+resources:
+  Resources:
+    StudentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.STUDENTS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    CoursesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.COURSES_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    FaqTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.FAQ_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    GradesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.GRADES_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: studentId
+            AttributeType: S
+          - AttributeName: term
+            AttributeType: S
+        KeySchema:
+          - AttributeName: studentId
+            KeyType: HASH
+          - AttributeName: term
+            KeyType: RANGE
+    EnrollmentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ENROLLMENTS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    TicketsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TICKETS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
